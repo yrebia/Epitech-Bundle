@@ -1,0 +1,107 @@
+#!/usr/bin/python3
+##
+## EPITECH PROJECT, 2021
+## 105torus
+## File description:
+## 105torus
+##
+
+import sys
+from math import *
+
+def error():
+    if len(sys.argv) != 8:
+        exit(84)
+    for i in range(1, 8):
+        try:
+            int(sys.argv[i])
+        except:
+            exit(84)
+    if sys.argv[1] != '1' and sys.argv[1] != '2' and sys.argv[1] != '3':
+        exit(84)
+    if int(sys.argv[7]) < 0:
+        exit(84)
+
+def solution(x):
+    return (int(sys.argv[6]) * x**4 + int(sys.argv[5]) * x**3 + int(sys.argv[4]) * x**2 + int(sys.argv[3]) * x + + int(sys.argv[2]))
+
+def solution_prim(x):
+    return ((4 * int(sys.argv[6]) * x**3) + (3 * int(sys.argv[5]) * x**2) + (2 * int(sys.argv[4]) * x))
+
+def bisection():
+    i = 0
+    a = 0
+    b = 1
+    c = (a + b) / 2
+    min = (1 / (10 ** int(sys.argv[7])))
+    while ((b - a) > min):
+        if i > 500:
+            exit(84)
+        p = str(round(c, int(sys.argv[7])))
+        while ((len(str(a)) > len(p) or len(str(b)) > len(p)) and len(p) < int(sys.argv[7]) + 2):
+            p += '0'
+        print('x =', p)
+        if solution(a) * solution(c) < 0:
+            b = c
+        else:
+            a = c
+        if (solution(c) == 0):
+            exit(0)
+        c = (a + b) / 2
+        i += 1
+
+def newton():
+    i = 0
+    x1 = 0.5
+    x2 = 0.5
+    print('x =', x1)
+    while (i < 3):
+        if i > 500:
+            exit(84)
+        x1 = x2
+        if solution_prim(x1) == 0:
+            exit(84)
+        x2 = x1 - (solution(x1) / solution_prim(x1))
+        p = str(round(x2, int(sys.argv[7])))
+        while ((len(str(x1)) > len(p) or len(str(x2)) > len(p)) and len(p) < int(sys.argv[7]) + 2):
+            p += '0'
+        print('x =', p)
+        if (solution(x2) == 0):
+            exit(0)
+        i += 1
+
+def secant():
+    i = 0
+    a = 0
+    b = 1
+    if (solution(b) - solution(a)) == 0:
+        exit(84)
+    x = a - solution(a) * ((b - a) / (solution(b) - solution(a)))
+    print('x =', x)
+    min = (1 / (10 ** int(sys.argv[7])))
+    while ((b - x) > min and (x - a) > min):
+        if i > 500:
+            exit(84)
+        if solution(a) * solution(x) < 0:
+            b = x
+        else:
+            a = x
+        if (solution(b) - solution(a)) == 0:
+            exit(84)
+        x = a - solution(a) * ((b - a) / (solution(b) - solution(a)))
+        p = str(round(x, int(sys.argv[7])))
+        while ((len(str(a)) > len(p) or len(str(b)) > len(p)) and len(p) < int(sys.argv[7]) + 2):
+            p += '0'
+        print('x =', p)
+        if (solution(x) == 0):
+            exit(0)
+        i += 1
+
+
+error()
+if sys.argv[1] == '1':
+    bisection()
+if sys.argv[1] == '2':
+    newton()
+if sys.argv[1] == '3':
+    secant()

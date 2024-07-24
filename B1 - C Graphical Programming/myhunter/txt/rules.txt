@@ -1,0 +1,5 @@
+The goal is to shoot a maximum of ducks, if you shoot 10 ducks, you go to the next level,
+but if you miss 3 shoots, the game is over.
+Keys :
+Left click -> Shoot
+Escape -> Open the menu

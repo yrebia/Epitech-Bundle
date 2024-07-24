@@ -1,0 +1,154 @@
+#!/usr/bin/python3
+##
+## EPITECH PROJECT, 2021
+## 102architect
+## File description:
+## 102architect
+##
+
+import sys
+import math
+from math import *
+
+def error(max):
+    if sys.argv[3] != '-s' and sys.argv[3] != '-t' and sys.argv[3] != '-r' and sys.argv[3] != '-z':
+        exit(84)
+    for i in range (3, max):
+        if sys.argv[i] == '-t':
+            try:
+                int(sys.argv[i + 1])
+                int(sys.argv[i + 2])
+            except:
+                exit(84)
+            if len(sys.argv) > i + 3:
+                if sys.argv[i + 3] != '-s' and sys.argv[i + 3] != '-t' and sys.argv[i + 3] != '-z' and sys.argv[i + 3] != '-r':
+                    exit(84)
+        if sys.argv[i] == '-z':
+            try:
+                int(sys.argv[i + 1])
+                int(sys.argv[i + 2])
+            except:
+                exit(84)
+            if len(sys.argv) > i + 3:
+                if sys.argv[i + 3] != '-s' and sys.argv[i + 3] != '-t' and sys.argv[i + 3] != '-z' and sys.argv[i + 3] != '-r':
+                    exit(84)
+        if sys.argv[i] == '-r':
+            try:
+                int(sys.argv[i + 1])
+            except:
+                exit(84)
+            if len(sys.argv) > i + 2:
+                if sys.argv[i + 2] != '-s' and sys.argv[i + 2] != '-t' and sys.argv[i + 2] != '-z' and sys.argv[i + 2] != '-r':
+                    exit(84)
+        if sys.argv[i] == '-s':
+            try:
+                int(sys.argv[i + 1])
+            except:
+                exit(84)
+            if len(sys.argv) > i + 2:
+                if sys.argv[i + 2] != '-s' and sys.argv[i + 2] != '-t' and sys.argv[i + 2] != '-r' and sys.argv[i + 2] != '-z':
+                    exit(84)
+
+def multiply_matrices(new, matrice):
+    result = [[0 for i in range(3)] for j in range(3)]
+    for i in range(len(new)):
+        for j in range(len(matrice)):
+            for k in range(len(matrice)):
+                result[i][j] += new[i][k] * matrice[k][j]
+    return (result)
+
+def translation(x, y, matrice):
+    print('Translation along vector ({},'.format(x), '{})'.format(y))
+    matrice[0][2] += x
+    matrice[1][2] += y
+    return (matrice)
+
+def scaling(x, y, matrice):
+    print('Scaling by factors {}'.format(x), 'and {}'.format(y))
+    new_matrice = [[0 for i in range(3)] for j in range(3)]
+    new_matrice[0][0] = x
+    new_matrice[1][1] = y
+    new_matrice[2][2] = 1
+    matrice = multiply_matrices(new_matrice, matrice)
+    return (matrice)
+
+def reflection(x, matrice):
+    print('Reflection over an axis with an inclination angle of {}'.format(x), 'degrees')
+    new_matrice = [[0 for i in range(3)] for j in range(3)]
+    x *= (pi/180)
+    new_matrice[0][0] = math.cos(2 * x)
+    new_matrice[0][1] = math.sin(2 * x)
+    new_matrice[1][0] = math.sin(2 * x)
+    new_matrice[1][1] = -math.cos(2 * x)
+    new_matrice[2][2] = 1
+    matrice = multiply_matrices(new_matrice, matrice)
+    return (matrice)
+
+def rotation(x, matrice):
+    print('Rotation by a {}'.format(x), 'degree angle')
+    new_matrice = [[0 for i in range(3)] for j in range(3)]
+    x *= (pi/180)
+    new_matrice[0][0] = math.cos(x)
+    new_matrice[0][1] = -math.sin(x)
+    new_matrice[1][0] = math.sin(x)
+    new_matrice[1][1] = math.cos(x)
+    new_matrice[2][2] = 1
+    matrice = multiply_matrices(new_matrice, matrice)
+    return (matrice)
+
+# check le minimum d'argv
+if (len(sys.argv) == 2 and sys.argv[1] == '-h'):
+    print("USAGE\n   ./102architect x y transfo1 arg11 [arg12] [transfo2 arg12 [arg22]] ...\n\nDESCRIPTION\n   x   abscissa of the original point\n   y   ordinate of the original point\n\n   transfo arg1 [arg2]\n   -t i j translation along vector (i, j)\n   -z m n scaling by factors m (x-axis) and n (y-axis)\n   -r d   rotation centered in O by a d degree angle\n   -s d   reflection over the axis passing through O with an inclination\n          angle of d degrees")
+    exit(0)
+elif (len(sys.argv) < 5):
+    exit(84)
+
+# check si x et y sont des float
+try:
+    float(sys.argv[1])
+    float(sys.argv[2])
+except:
+    exit(84)
+
+max = len(sys.argv)
+
+# check si les flags ont assez d'argv float
+error(max)
+
+vecteur = [float(sys.argv[1]), float(sys.argv[2]), 1]
+
+matrice = [[0 for i in range(3)] for j in range(3)]
+matrice[0][0] = 1
+matrice[1][1] = 1
+matrice[2][2] = 1
+
+for i in range(3, max):
+    if sys.argv[i] == '-t':
+        matrice = translation(int(sys.argv[i + 1]), int(sys.argv[i + 2]), matrice)
+    if sys.argv[i] == '-z':
+        matrice = scaling(int(sys.argv[i + 1]), int(sys.argv[i + 2]), matrice)
+    if sys.argv[i] == '-s':
+        matrice = reflection(int(sys.argv[i + 1]), matrice)
+    if sys.argv[i] == '-r':
+        matrice = rotation(int(sys.argv[i + 1]), matrice)
+
+tmp = [vecteur[i] for i in range(3)]
+
+vecteur[0] = matrice[0][0] * tmp[0] + matrice[0][1] * vecteur[1] + matrice[0][2]
+vecteur[1] = matrice[1][0] * tmp[0] + matrice[1][1] * vecteur[1] + matrice[1][2]
+vecteur[2] = matrice[2][0] * tmp[0] + matrice[2][1] * vecteur[1] + matrice[2][2]
+
+# check useless neg
+for i in range(len(matrice)):
+    for j in range(len(matrice)):
+        if matrice[i][j] < 0 and matrice[i][j] > -0.005:
+            matrice[i][j] = 0
+
+for i in range(len(matrice)):
+    print('{:.2f} '.format(matrice[i][0]), ' {:.2f} '.format(matrice[i][1]), ' {:.2f}'.format(matrice[i][2]))
+
+for i in range(len(vecteur)):
+    if vecteur[i] < 0 and vecteur[i] > -0.005:
+        vecteur[i] = 0
+
+print('({:.2f},'.format(float(sys.argv[1])), '{:.2f})'.format(float(sys.argv[2])), '=>', '({:.2f},'.format(vecteur[0]), '{:.2f})'.format(vecteur[1]))

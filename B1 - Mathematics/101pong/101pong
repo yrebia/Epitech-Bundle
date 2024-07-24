@@ -1,0 +1,62 @@
+#!/usr/bin/python3
+##
+## EPITECH PROJECT, 2021
+## 101pong
+## File description:
+## 101pong
+##
+
+import sys
+from math import sqrt, acos, pi
+
+# 0 : bon argv?
+if (len(sys.argv) != 8) :
+    print("USAGE\n  ./101pong x0 y0 z0 x1 y1 z1 n\n\nDESCRIPTION\n    x0 ball abscissa at time t - 1\n    y0 ball ordinate at time t - 1\n    z0 ball altitude at time t - 1\n    x1 ball abscissa at time t\n    y1 ball ordinate at time t\n    z1 ball altitude at time t\n    n time shift (greater than or equal to zero, integer)")
+    sys.exit(84)
+
+try:
+    int(sys.argv[7])
+except:
+    sys.exit(84)
+
+if (int(sys.argv[7]) < 0):
+    sys.exit(84)
+
+for i in range(1, 7):
+    try:
+        float(sys.argv[i])
+    except:
+        sys.exit(84)
+    
+# 1 : position de la balle
+pos = [float(sys.argv[4]), float(sys.argv[5]), float(sys.argv[6])]
+
+# 2 : velocity
+velocity = [float(sys.argv[4]) - float(sys.argv[1]), float(sys.argv[5]) - float(sys.argv[2]), float(sys.argv[6]) - float(sys.argv[3])]
+print('The velocity vector of the ball is:')
+print('({:.2f}, '.format(velocity[0]), '{:.2f},'.format(velocity[1]), '{:.2f})'.format(velocity[2]))
+
+# 3 : ball coordinates at t + n
+pos[0] += velocity[0] * int(sys.argv[7])
+pos[1] += velocity[1] * int(sys.argv[7])
+pos[2] += velocity[2] * int(sys.argv[7])
+print("At time t +", '{},'.format(sys.argv[7]), "ball coordinates will be:")
+print('({:.2f}, '.format(pos[0]), '{:.2f},'.format(pos[1]), '{:.2f})'.format(pos[2]))
+
+# 4 : reach the bat? ou angle
+if (float(sys.argv[6]) < 0 and pos[2] < 0) or (float(sys.argv[6]) > 0 and pos[2] > 0):
+    print("The ball won't reach the paddle.")
+else:
+    print("The incidence angle is:")
+    v1 = ((velocity[0])**2) + ((velocity[1])**2) + ((velocity[2])**2)
+    v2 = (0**2) + (0**2) + (1**2)
+    if v1 < 0 or v2 < 0:
+        sys.exit(84)
+    norme = (sqrt(v1)) * (sqrt(v2))
+    if norme < 0:
+        sys.exit(84)
+    cosangle = acos(((velocity[0]*0) + (velocity[1]*0) + (velocity[2]*1)) / norme)
+    cosangle *= 180/pi
+    cosangle = 90 - cosangle
+    cosangle = abs(cosangle)
+    print('{:.2f} degrees'.format(cosangle))

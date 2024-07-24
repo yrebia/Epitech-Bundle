@@ -1,0 +1,57 @@
+#!/usr/bin/python3
+##
+## EPITECH PROJECT, 2022
+## 104intersection
+## File description:
+## 104intersection
+##
+
+import sys
+from math import *
+
+# parcing :
+def error():
+    if len(sys.argv) != 9:
+        exit(84)
+    if sys.argv[1] != '1' and sys.argv[1] != '2' and sys.argv[1] != '3':
+        exit(84)
+    for i in range(1, 9):
+        try:
+            int(sys.argv[i])
+        except:
+            exit(84)
+    if sys.argv[5] == '0' and sys.argv[6] == '0' and sys.argv[7] == '0':
+        exit(84)
+    if int(sys.argv[8]) < 0:
+        exit(84)
+
+def usage():
+    if len(sys.argv) == 1:
+        exit(84)
+    if sys.argv[1] == '-h':
+        print('USAGE')
+        print('    ./104intersection opt xp yp zp xv yv zv p\n')
+        print('DESCRIPTION')
+        print('    opt             surface option: 1 for a sphere, 2 for a ylinder, 3 for a cone')
+        print('    (xp, yp, zp)    coordinates of a point by which the light ray passes through')
+        print('    (xv, yv, zv)    coordinates of a vector parallel the light ray')
+        print('    p               parameter: radius of the sphere, radius of the cylinder, or')
+        print('                    angle formed by the cone and the Z-axis')
+        exit(0)
+
+usage()
+error()
+
+if sys.argv[1] == '1':
+    print('Sphere of radius', sys.argv[8])
+elif sys.argv[1] == '2':
+    print('Cylinder of radius', sys.argv[8])
+else:
+    print('Cone with a', sys.argv[8], 'degree angle')
+
+point = [int(sys.argv[2]), int(sys.argv[3]), int(sys.argv[4])]
+vector = [int(sys.argv[5]), int(sys.argv[6]), int(sys.argv[7])]
+
+print('Line passing through the point ({},'.format(point[0]), '{},'.format(point[1]), '{}) and parallel to the vector'.format(point[2]), '({},'.format(vector[0]), '{},'.format(vector[1]), '{})'.format(vector[2]))
+
+print('No intersection point.')
